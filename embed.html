@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malawi DHS 2024 Dashboard · FemAnalytica</title>
+  <meta name="description" content="Interactive data dashboard for the Malawi Demographic & Health Survey 2024. Key indicators on child mortality, maternal health, nutrition, and gender equity.">
+  <meta property="og:title" content="Malawi DHS 2024 · FemAnalytica">
+  <meta property="og:description" content="Interactive data dashboard covering child mortality, maternal health, nutrition, contraception, and gender-based violence indicators from the Malawi DHS 2024.">
+  <meta property="og:image" content="https://femanalytica.github.io/malawi-dhs-2024/Transparent Logo.png">
+  <meta property="og:url" content="https://femanalytica.github.io/malawi-dhs-2024/dashboard.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Reset & base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan:   #45CDD8;
+      --purple: #7B6FD4;
+      --navy:   #1B3A6B;
+      --bg:     #060E19;
+      --text:   #F5FAFE;
+      --text2:  #C6DCE9;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Embed wrapper layout ─────────────────────────────────────── */
+    .embed-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── Optional intro bar (hide if you want a seamless embed) ───── */
+    .embed-intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-wrap: wrap;
+    }
+
+    .embed-intro-text {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    .embed-intro-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1px;
+    }
+
+    .embed-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--cyan);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: opacity .15s;
+      flex-shrink: 0;
+    }
+    .embed-cta:hover { opacity: .85; }
+    .embed-cta svg { flex-shrink: 0; }
+
+    /* ── The iframe itself ────────────────────────────────────────── */
+    .embed-frame-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    iframe.dhs-frame {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 800px;
+      border: none;
+      background: var(--bg);
+    }
+
+    /* ── Loading overlay ──────────────────────────────────────────── */
+    .frame-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: var(--bg);
+      pointer-events: none;
+      transition: opacity .4s ease;
+    }
+    .frame-loader.hidden { opacity: 0; }
+
+    .loader-ring {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.08);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .frame-loader p {
+      font-size: 12px;
+      color: var(--text2);
+      letter-spacing: .04em;
+    }
+
+    /* ── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .embed-intro { padding: 12px 16px; }
+      iframe.dhs-frame { min-height: 600px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="embed-wrapper">
+
+    <!--
+      ╔══════════════════════════════════════════════════════════════╗
+      ║  OPTIONAL INTRO BAR                                          ║
+      ║  Remove or hide this <div class="embed-intro"> block if you  ║
+      ║  want the dashboard to fill the entire container seamlessly. ║
+      ╚══════════════════════════════════════════════════════════════╝
+    -->
+    <div class="embed-intro">
+      <div class="embed-intro-text">
+        <strong>Malawi Demographic &amp; Health Survey 2024</strong>
+        Interactive dashboard · National Statistical Office · Final Report, December 2025
+      </div>
+      <a class="embed-cta"
+         href="https://femanalytica.github.io/malawi-dhs-2024/dashboard.html"
+         target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+          <path d="M6 3H3a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-3M9 2h5m0 0v5m0-5L8 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Open full dashboard
+      </a>
+    </div>
+    <!-- /OPTIONAL INTRO BAR -->
+
+    <div class="embed-frame-wrap">
+
+      <!-- Loading indicator shown until iframe fires onload -->
+      <div class="frame-loader" id="loader">
+        <div class="loader-ring"></div>
+        <p>Loading dashboard…</p>
+      </div>
+
+      <iframe
+        class="dhs-frame"
+        id="dhsFrame"
+        src="https://femanalytica.github.io/malawi-dhs-2024/dashboard.html"
+        title="Malawi DHS 2024 Interactive Dashboard · FemAnalytica"
+        loading="lazy"
+        allowfullscreen
+        onload="document.getElementById('loader').classList.add('hidden')"
+      ></iframe>
+
+    </div>
+  </div>
+
+  <!--
+  ╔════════════════════════════════════════════════════════════════════╗
+  ║  HOW TO EMBED THIS DASHBOARD IN YOUR WEBSITE                       ║
+  ╠════════════════════════════════════════════════════════════════════╣
+  ║                                                                    ║
+  ║  OPTION A — Link to this whole page (recommended)                  ║
+  ║  Host embed.html on your server (or GitHub Pages) and link to it   ║
+  ║  from any page on femanalytica.com.                                ║
+  ║                                                                    ║
+  ║  OPTION B — Bare iframe snippet                                     ║
+  ║  Paste this anywhere in your site's HTML or CMS:                   ║
+  ║                                                                    ║
+  ║  <iframe                                                           ║
+  ║    src="https://femanalytica.github.io/malawi-dhs-2024/dashboard.html"
+  ║    width="100%" height="900"                                       ║
+  ║    style="border:none; border-radius:12px;"                        ║
+  ║    title="Malawi DHS 2024 Dashboard"                               ║
+  ║    loading="lazy" allowfullscreen>                                 ║
+  ║  </iframe>                                                         ║
+  ║                                                                    ║
+  ║  OPTION C — WordPress / Webflow / Squarespace                      ║
+  ║  Use an "Embed" or "Custom HTML" block and paste Option B above.   ║
+  ║                                                                    ║
+  ║  OPTION D — React / Next.js component                              ║
+  ║  See embed-react.jsx in this folder (if created).                  ║
+  ║                                                                    ║
+  ╚════════════════════════════════════════════════════════════════════╝
+  -->
+
+</body>
+</html>
