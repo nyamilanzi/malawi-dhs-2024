@@ -131,6 +131,15 @@ main { max-width:1380px; margin:0 auto; padding:28px 32px 64px; }
   color:var(--text); line-height:1; margin-bottom:7px;
 }
 .kpi-lbl { font-size:11px; color:var(--text2); line-height:1.4; }
+.kpi-ref {
+  font-size:10px; color:var(--text3); margin-top:6px;
+  font-weight:500; letter-spacing:0.02em;
+  display:flex; align-items:center; gap:5px;
+}
+.kpi-ref::before {
+  content:''; display:inline-block; width:14px; height:1px;
+  background:var(--text3); opacity:0.5; flex-shrink:0;
+}
 .kpi-val .tr-up   { font-size:14px; font-weight:700; color:var(--green); margin-left:4px; vertical-align:middle; }
 .kpi-val .tr-dn   { font-size:14px; font-weight:700; color:var(--green); margin-left:4px; vertical-align:middle; }
 .kpi-val .tr-warn { font-size:14px; font-weight:700; color:var(--amber); margin-left:4px; vertical-align:middle; }
@@ -255,10 +264,10 @@ footer .fr { font-size:11px; color:var(--text3); text-align:right; }
   <div class="rule"></div>
 
   <div class="kpi-row">
-    <div class="kpi"><div class="kpi-val">48<span class="tr-dn">▼</span></div><div class="kpi-lbl">Under-5 Mortality Rate per 1,000 live births</div></div>
-    <div class="kpi red"><div class="kpi-val">224<span class="tr-dn">▼</span></div><div class="kpi-lbl">Maternal Mortality Ratio per 100,000 live births</div></div>
-    <div class="kpi green"><div class="kpi-val">97%<span class="tr-up">▲</span></div><div class="kpi-lbl">Births in a health facility</div></div>
-    <div class="kpi purple"><div class="kpi-val">66%<span class="tr-up">▲</span></div><div class="kpi-lbl">Married women using modern contraception</div></div>
+    <div class="kpi"><div class="kpi-val">48<span class="tr-dn">▼</span></div><div class="kpi-lbl">Under-5 Mortality Rate per 1,000 live births</div><div class="kpi-ref">234 in 1992</div></div>
+    <div class="kpi red"><div class="kpi-val">224<span class="tr-dn">▼</span></div><div class="kpi-lbl">Maternal Mortality Ratio per 100,000 live births</div><div class="kpi-ref">1,123 in 1993–2000</div></div>
+    <div class="kpi green"><div class="kpi-val">97%<span class="tr-up">▲</span></div><div class="kpi-lbl">Births in a health facility</div><div class="kpi-ref">55% in 2000</div></div>
+    <div class="kpi purple"><div class="kpi-val">66%<span class="tr-up">▲</span></div><div class="kpi-lbl">Married women using modern contraception</div><div class="kpi-ref">26% in 2000</div></div>
     <div class="kpi amber"><div class="kpi-val">38%<span class="tr-warn">→</span></div><div class="kpi-lbl">Children under 5 who are stunted</div></div>
     <div class="kpi red"><div class="kpi-val">28.5%<span class="tr-warn">→</span></div><div class="kpi-lbl">Women experiencing IPV in past 12 months</div></div>
   </div>
@@ -302,9 +311,9 @@ footer .fr { font-size:11px; color:var(--text3); text-align:right; }
   <div class="rule"></div>
 
   <div class="kpi-row">
-    <div class="kpi"><div class="kpi-val">24<span class="tr-dn">▼</span></div><div class="kpi-lbl">Neonatal mortality per 1,000 live births</div></div>
-    <div class="kpi"><div class="kpi-val">35<span class="tr-dn">▼</span></div><div class="kpi-lbl">Infant mortality per 1,000 live births</div></div>
-    <div class="kpi"><div class="kpi-val">48<span class="tr-dn">▼</span></div><div class="kpi-lbl">Under-5 mortality per 1,000 live births</div></div>
+    <div class="kpi"><div class="kpi-val">24<span class="tr-dn">▼</span></div><div class="kpi-lbl">Neonatal mortality per 1,000 live births</div><div class="kpi-ref">42 in 1992</div></div>
+    <div class="kpi"><div class="kpi-val">35<span class="tr-dn">▼</span></div><div class="kpi-lbl">Infant mortality per 1,000 live births</div><div class="kpi-ref">135 in 1992</div></div>
+    <div class="kpi"><div class="kpi-val">48<span class="tr-dn">▼</span></div><div class="kpi-lbl">Under-5 mortality per 1,000 live births</div><div class="kpi-ref">234 in 1992</div></div>
     <div class="kpi amber"><div class="kpi-val">37<span class="tr-warn">→</span></div><div class="kpi-lbl">Perinatal mortality per 1,000 pregnancies ≥28 wks</div></div>
     <div class="kpi red"><div class="kpi-val">50%<span class="tr-warn">→</span></div><div class="kpi-lbl">Under-5 deaths that are neonatal</div></div>
   </div>
@@ -488,7 +497,7 @@ footer .fr { font-size:11px; color:var(--text3); text-align:right; }
   <div class="rule"></div>
 
   <div class="kpi-row">
-    <div class="kpi"><div class="kpi-val">65%<span class="tr-bad">▼</span></div><div class="kpi-lbl">Married women employed (vs 93% men)</div></div>
+    <div class="kpi"><div class="kpi-val">65%<span class="tr-bad">▼</span></div><div class="kpi-lbl">Married women employed (vs 93% men)</div><div class="kpi-ref">76% in 2010</div></div>
     <div class="kpi amber"><div class="kpi-val">26%<span class="tr-warn">→</span></div><div class="kpi-lbl">Women deciding alone how earnings are used</div></div>
     <div class="kpi"><div class="kpi-val">52%<span class="tr-up">▲</span></div><div class="kpi-lbl">Women who own land</div></div>
     <div class="kpi green"><div class="kpi-val">73%<span class="tr-up">▲</span></div><div class="kpi-lbl">Women making own health decisions (alone/jointly)</div></div>
@@ -582,9 +591,9 @@ footer .fr { font-size:11px; color:var(--text3); text-align:right; }
   <div class="rule"></div>
 
   <div class="kpi-row">
-    <div class="kpi red"><div class="kpi-val">245<span class="tr-dn">▼</span></div><div class="kpi-lbl">Pregnancy-Related Mortality Ratio per 100,000 live births</div></div>
-    <div class="kpi red"><div class="kpi-val">224<span class="tr-dn">▼</span></div><div class="kpi-lbl">Maternal Mortality Ratio per 100,000 live births</div></div>
-    <div class="kpi green"><div class="kpi-val">1.0%<span class="tr-dn">▼</span></div><div class="kpi-lbl">Lifetime risk of pregnancy-related death</div></div>
+    <div class="kpi red"><div class="kpi-val">245<span class="tr-dn">▼</span></div><div class="kpi-lbl">Pregnancy-Related Mortality Ratio per 100,000 live births</div><div class="kpi-ref">1,123 in 1993–2000</div></div>
+    <div class="kpi red"><div class="kpi-val">224<span class="tr-dn">▼</span></div><div class="kpi-lbl">Maternal Mortality Ratio per 100,000 live births</div><div class="kpi-ref">1,123 in 1993–2000</div></div>
+    <div class="kpi green"><div class="kpi-val">1.0%<span class="tr-dn">▼</span></div><div class="kpi-lbl">Lifetime risk of pregnancy-related death</div><div class="kpi-ref">7.0% in 1993–2000</div></div>
     <div class="kpi"><div class="kpi-val">18<span class="tr-warn">→</span></div><div class="kpi-lbl">Stillbirths per 1,000 pregnancies ≥28 weeks</div></div>
     <div class="kpi"><div class="kpi-val">19<span class="tr-warn">→</span></div><div class="kpi-lbl">Early neonatal deaths per 1,000 live births</div></div>
   </div>
