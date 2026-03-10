@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malawi DHS 2024 — FemAnalytica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── BRAND TOKENS (from FemAnalytica logo) ── */
+:root {
+  --cyan:     #45CDD8;   /* logo left-peak cyan */
+  --purple:   #7B6FD4;   /* logo right-peak purple */
+  --teal:     #2B9EBA;   /* logo subtitle teal */
+  --navy:     #1B3A6B;   /* logo wordmark navy */
+
+  --bg:       #070F1B;
+  --surface:  #0C1826;
+  --surface2: #101E2E;
+  --border:   #182B3E;
+
+  --text:     #F2F8FD;
+  --text2:    #C4DAEA;
+  --text3:    #8AAFC8;
+
+  --green:    #2FC98B;
+  --amber:    #F0A52A;
+  --red:      #E04A4A;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* ── HEADER ── */
+header {
+  position:sticky; top:0; z-index:200;
+  background: linear-gradient(to right, #45CDD8 0%, #7B6FD4 28%, #4A3A9B 55%, #1B3A6B 78%, #060E1A 100%);
+  border-bottom: none;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+}
+.header-inner {
+  max-width:1380px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px; height:62px; gap:16px;
+}
+.brand { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:5px; }
+.brand img {
+  height:32px; width:auto; display:block; flex-shrink:0;
+}
+.brand-tagline {
+  font-size:9.5px; font-weight:600; color:rgba(10,30,65,0.80);
+  letter-spacing:.1em; text-transform:uppercase;
+}
+.header-meta {
+  font-size:11px; color:rgba(255,255,255,0.88); text-align:right; line-height:1.5;
+  background:rgba(0,0,0,0.25); border-radius:20px; padding:6px 16px;
+  backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.1);
+}
+.header-meta strong { color:#fff; font-weight:600; display:block; font-size:12px; }
+
+/* ── NAV ── */
+nav {
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto; scrollbar-width:none;
+}
+nav::-webkit-scrollbar { display:none; }
+.nav-inner {
+  max-width:1380px; margin:0 auto;
+  display:flex; padding:0 28px;
+}
+.tab {
+  padding:0 16px; height:40px;
+  background:none; border:none; cursor:pointer;
+  font-family:inherit; font-size:12px; font-weight:500;
+  color:var(--text3); border-bottom:2px solid transparent;
+  white-space:nowrap; letter-spacing:0.1px;
+  transition:color .15s, border-color .15s;
+}
+.tab:hover { color:var(--text2); }
+.tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+
+/* ── MAIN ── */
+main { max-width:1380px; margin:0 auto; padding:24px 28px 56px; }
+.section { display:none; }
+.section.active { display:block; }
+
+/* ── PAGE HEADING ── */
+.page-head { margin-bottom:20px; }
+.page-head h2 {
+  font-size:17px; font-weight:700; letter-spacing:-0.3px; margin-bottom:4px;
+}
+.page-head h2 .accent { color:var(--cyan); }
+.page-head p { font-size:12px; color:var(--text2); max-width:620px; line-height:1.6; }
+.rule { height:1px; background:var(--border); margin-bottom:20px; }
+
+/* ── KPI STRIP ── */
+.kpi-row {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px; margin-bottom:20px;
+}
+.kpi {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:14px 15px;
+  border-top:2px solid var(--cyan);
+  transition:border-color .2s;
+}
+.kpi.purple { border-top-color:var(--purple); }
+.kpi.green  { border-top-color:var(--green); }
+.kpi.amber  { border-top-color:var(--amber); }
+.kpi.red    { border-top-color:var(--red); }
+
+.kpi-val {
+  font-size:22px; font-weight:700; letter-spacing:-0.5px;
+  color:var(--text); line-height:1; margin-bottom:5px;
+}
+.kpi-lbl { font-size:11px; color:var(--text2); line-height:1.35; }
+.kpi-delta {
+  font-size:9.5px; font-weight:600; color:var(--text3); margin-top:4px;
+}
+
+/* ── CARDS ── */
+.grid { display:grid; gap:12px; margin-bottom:12px; }
+.grid.g2 { grid-template-columns:repeat(2,1fr); }
+.grid.g3 { grid-template-columns:repeat(3,1fr); }
+@media(max-width:860px) {
+  .grid.g2,.grid.g3 { grid-template-columns:1fr; }
+}
+
+.card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:18px;
+}
+.card.s2 { grid-column:span 2; }
+@media(max-width:860px) { .card.s2 { grid-column:span 1; } }
+
+.card-title {
+  font-size:12.5px; font-weight:600; color:var(--text);
+  letter-spacing:-0.1px; margin-bottom:2px;
+  display:flex; align-items:center; gap:7px;
+}
+.tag {
+  font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;
+  padding:2px 6px; border-radius:3px;
+  background:rgba(69,205,216,0.1); color:var(--cyan);
+}
+.tag.pu { background:rgba(123,111,212,0.12); color:var(--purple); }
+.tag.gr { background:rgba(47,201,139,0.12); color:var(--green); }
+.tag.rd { background:rgba(224,74,74,0.12);  color:var(--red); }
+.tag.am { background:rgba(240,165,42,0.12); color:var(--amber); }
+
+.card-sub { font-size:11px; color:var(--text3); margin-bottom:14px; line-height:1.4; }
+
+/* ── NOTE (replaces heavy insight box) ── */
+.note {
+  margin-top:12px; padding:9px 11px;
+  background:var(--surface2); border-radius:6px;
+  border-left:2px solid var(--cyan);
+  font-size:11px; color:var(--text2); line-height:1.55;
+}
+.note.pu { border-left-color:var(--purple); }
+.note.am { border-left-color:var(--amber); }
+.note.rd { border-left-color:var(--red); }
+.note strong { color:var(--text); font-weight:600; }
+
+/* ── PROGRESS LIST ── */
+.prog-list { display:flex; flex-direction:column; gap:8px; }
+.prog-row { display:flex; align-items:center; gap:10px; }
+.prog-lbl { font-size:11px; color:var(--text2); min-width:0; flex:1; }
+.prog-val { font-size:11px; font-weight:600; color:var(--text); width:34px; text-align:right; flex-shrink:0; }
+.prog-track { height:4px; border-radius:3px; background:var(--surface2); flex:0 0 110px; }
+.prog-fill  { height:100%; border-radius:3px; }
+
+/* ── TILE GRID ── */
+.tiles {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:10px; margin-top:2px;
+}
+.tile {
+  background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+  padding:14px; border-left:2px solid var(--cyan);
+}
+.tile.pu { border-left-color:var(--purple); }
+.tile.am { border-left-color:var(--amber); }
+.tile.rd { border-left-color:var(--red); }
+.tile-lbl { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--text3); margin-bottom:5px; }
+.tile-body { font-size:11.5px; color:var(--text2); line-height:1.5; }
+.tile-body strong { color:var(--text); }
+
+/* ── FOOTER ── */
+footer {
+  border-top:1px solid var(--border); padding:18px 28px;
+  max-width:1380px; margin:0 auto;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:8px;
+}
+footer .fl { font-size:11px; color:var(--text3); }
+footer .fl strong { color:var(--cyan); font-weight:600; }
+footer .fr { font-size:10.5px; color:var(--text3); text-align:right; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="Transparent Logo.png" alt="FemAnalytica">
+      <span class="brand-tagline">Data Intelligence for Gender &amp; Health Equity</span>
+    </div>
+    <div class="header-meta">
+      <strong>Malawi Demographic &amp; Health Survey 2024</strong>
+      National Statistical Office · Final Report, December 2025
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="tab active" onclick="go('overview')"    id="tab-overview">Overview</button>
+    <button class="tab"        onclick="go('mortality')"   id="tab-mortality">Child Mortality</button>
+    <button class="tab"        onclick="go('maternal')"    id="tab-maternal">Maternal &amp; Newborn</button>
+    <button class="tab"        onclick="go('childhealth')" id="tab-childhealth">Child Health</button>
+    <button class="tab"        onclick="go('hpv')"         id="tab-hpv">HPV Module</button>
+    <button class="tab"        onclick="go('empower')"     id="tab-empower">Women's Empowerment</button>
+    <button class="tab"        onclick="go('violence')"    id="tab-violence">Domestic Violence</button>
+    <button class="tab"        onclick="go('preg')"        id="tab-preg">Pregnancy Mortality</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══ OVERVIEW ═══ -->
+<div class="section active" id="sec-overview">
+  <div class="page-head">
+    <h2>Malawi DHS 2024 — <span class="accent">National Snapshot</span></h2>
+    <p>The 2024 MDHS covered 20,849 women and 5,027 men age 15–49. Key findings span health, mortality, empowerment and gender-based violence, with trends from 1992–2024.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">48</div><div class="kpi-lbl">Under-5 Mortality Rate per 1,000 live births</div><div class="kpi-delta">Down from 234 in 1992</div></div>
+    <div class="kpi red"><div class="kpi-val">224</div><div class="kpi-lbl">Maternal Mortality Ratio per 100,000 live births</div><div class="kpi-delta">Down from 1,123 in 1993–2000</div></div>
+    <div class="kpi green"><div class="kpi-val">97%</div><div class="kpi-lbl">Births in a health facility</div><div class="kpi-delta">Near-universal coverage</div></div>
+    <div class="kpi purple"><div class="kpi-val">66%</div><div class="kpi-lbl">Married women using modern contraception</div><div class="kpi-delta">Up from 26% in 2000</div></div>
+    <div class="kpi amber"><div class="kpi-val">38%</div><div class="kpi-lbl">Children under 5 who are stunted</div><div class="kpi-delta">Critical and persistent</div></div>
+    <div class="kpi red"><div class="kpi-val">28.5%</div><div class="kpi-lbl">Women experiencing IPV in past 12 months</div><div class="kpi-delta">Remains high</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-title">Child Mortality Decline, 1992–2024 <span class="tag">Trend</span></div>
+      <div class="card-sub">Deaths per 1,000 live births across all six MDHS surveys</div>
+      <canvas id="ov-mort" height="190"></canvas>
+      <div class="note">Under-5 mortality fell <strong>79%</strong> since 1992. Neonatal deaths now account for <strong>50% of all under-5 deaths</strong>.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">SDG Health Indicators — 2024 <span class="tag">Decreasing</span></div>
+      <div class="card-sub">Coverage against selected Sustainable Development Goal health targets</div>
+      <div class="prog-list" id="sdg-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Total Fertility Rate, 1992–2024 <span class="tag">Trend</span></div>
+      <div class="card-sub">Children per woman — near halving over three decades</div>
+      <canvas id="ov-tfr" height="190"></canvas>
+      <div class="note">TFR fell from <strong>6.7 (1992) to 3.7 (2024)</strong>. Adolescent birth rate remains high at <strong>133 per 1,000 women age 15–19</strong>.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Urban vs Rural — Health Equity Gap <span class="tag pu">Comparison</span></div>
+      <div class="card-sub">% achieving key maternal and child health indicators — Urban vs Rural</div>
+      <canvas id="ov-bubble" height="190"></canvas>
+      <div class="note pu">Gaps are widest in <strong>full vaccination (18pp) and 4+ ANC visits (17pp)</strong> — coverage deficits that compound rural child mortality.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHILD MORTALITY ═══ -->
+<div class="section" id="sec-mortality">
+  <div class="page-head">
+    <h2>Infant &amp; Child <span class="accent">Mortality</span></h2>
+    <p>Under-5 mortality fell 79% from 1992 to 2024. Neonatal deaths account for half of all under-5 deaths. Urban–rural disparities persist.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">24</div><div class="kpi-lbl">Neonatal mortality per 1,000 live births</div><div class="kpi-delta">Down from 42 in 1992</div></div>
+    <div class="kpi"><div class="kpi-val">35</div><div class="kpi-lbl">Infant mortality per 1,000 live births</div><div class="kpi-delta">Down from 135 in 1992</div></div>
+    <div class="kpi"><div class="kpi-val">48</div><div class="kpi-lbl">Under-5 mortality per 1,000 live births</div><div class="kpi-delta">Down from 234 in 1992</div></div>
+    <div class="kpi amber"><div class="kpi-val">37</div><div class="kpi-lbl">Perinatal mortality per 1,000 pregnancies ≥28 wks</div></div>
+    <div class="kpi red"><div class="kpi-val">50%</div><div class="kpi-lbl">Under-5 deaths that are neonatal</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card s2">
+      <div class="card-title">Mortality Trends, 1992–2024 <span class="tag">All Survey Years</span></div>
+      <div class="card-sub">Deaths per 1,000 live births — neonatal, infant and under-5 across six MDHS surveys</div>
+      <canvas id="mort-trend" height="160"></canvas>
+      <div class="note">Under-5 fell from 234 to 48. <strong>Neonatal mortality has been the slowest to decline</strong> and now constitutes half of all child deaths.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mortality by Residence <span class="tag">Urban vs Rural</span></div>
+      <div class="card-sub">Neonatal, infant and under-5 mortality rates, 5-year period before survey</div>
+      <canvas id="mort-res" height="200"></canvas>
+      <div class="note">Rural under-5 mortality is ~<strong>16% higher</strong> than urban. Urban neonatal rate (28) paradoxically exceeds rural, reflecting concentrated high-risk births.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mortality by Child's Sex <span class="tag">Disparity</span></div>
+      <div class="card-sub">Male children face consistently higher mortality across all measures</div>
+      <canvas id="mort-sex" height="200"></canvas>
+      <div class="note">Boys carry a <strong>U5MR of 58 vs 39 for girls</strong> — a 49% higher risk consistent with global patterns.</div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-title">Perinatal Mortality by Mother's Age <span class="tag">Bar</span></div>
+      <div class="card-sub">Perinatal deaths per 1,000 pregnancies ≥28 weeks, by mother's age group</div>
+      <canvas id="mort-peri" height="200"></canvas>
+      <div class="note">Perinatal risk peaks at age extremes — mothers <strong>under 20 and over 40</strong> face the greatest risk for the newborn.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MATERNAL & NEWBORN ═══ -->
+<div class="section" id="sec-maternal">
+  <div class="page-head">
+    <h2>Maternal &amp; Newborn <span class="accent">Care</span></h2>
+    <p>Near-universal facility delivery achieved. Key gaps remain in 4+ ANC visit frequency, postnatal coverage, and unmet need for unmarried women.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi green"><div class="kpi-val">96%</div><div class="kpi-lbl">ANC from a skilled provider</div></div>
+    <div class="kpi amber"><div class="kpi-val">62%</div><div class="kpi-lbl">Women with 4+ ANC visits</div></div>
+    <div class="kpi green"><div class="kpi-val">97%</div><div class="kpi-lbl">Births in a health facility</div></div>
+    <div class="kpi"><div class="kpi-val">12%</div><div class="kpi-lbl">Births by caesarean section</div></div>
+    <div class="kpi amber"><div class="kpi-val">58%</div><div class="kpi-lbl">Postnatal check within 2 days</div></div>
+    <div class="kpi red"><div class="kpi-val">13%</div><div class="kpi-lbl">Married women with unmet FP need</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-title">Modern Contraceptive Use, 2000–2024 <span class="tag">Trend</span></div>
+      <div class="card-sub">% currently married women using any vs modern method</div>
+      <canvas id="mat-con" height="200"></canvas>
+      <div class="note">Modern use rose from <strong>26% (2000) to 66% (2024)</strong>. Injectables dominate at 34% — high reliance on provider-dependent methods.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Method Mix — Modern Contraception 2024 <span class="tag">Donut</span></div>
+      <div class="card-sub">% married women using each modern method</div>
+      <canvas id="mat-mix" height="200"></canvas>
+      <div class="note">Injectables (34%) and implants (13%) dominate. <strong>Male condom use is just 3%</strong> — limiting dual protection against STIs.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Family Planning — Demand vs Unmet Need <span class="tag">Gap</span></div>
+      <div class="card-sub">Demand satisfied and unmet need by marital status</div>
+      <canvas id="mat-fp" height="200"></canvas>
+      <div class="note rd"><strong>28% of sexually active unmarried women have unmet need</strong> — more than double the 13% rate for married women.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Maternal Care Coverage Cascade <span class="tag">2024</span></div>
+      <div class="card-sub">Coverage at each stage from first ANC contact to postnatal care</div>
+      <canvas id="mat-cas" height="200"></canvas>
+      <div class="note am">Coverage drops sharply at <strong>4+ ANC visits (62%)</strong> and <strong>postnatal care (58%)</strong> — the two critical intervention gaps.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHILD HEALTH ═══ -->
+<div class="section" id="sec-childhealth">
+  <div class="page-head">
+    <h2>Child Health <span class="accent">&amp; Nutrition</span></h2>
+    <p>Stunting affects 38% of children under 5. Vaccination coverage and complementary feeding quality remain major gaps alongside high malaria burden.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi red"><div class="kpi-val">38%</div><div class="kpi-lbl">Children under 5 stunted</div></div>
+    <div class="kpi amber"><div class="kpi-val">10%</div><div class="kpi-lbl">Children under 5 underweight</div></div>
+    <div class="kpi"><div class="kpi-val">67%</div><div class="kpi-lbl">Children 12–23 months fully vaccinated (basic)</div></div>
+    <div class="kpi green"><div class="kpi-val">60%</div><div class="kpi-lbl">Children under 6 months exclusively breastfed</div></div>
+    <div class="kpi red"><div class="kpi-val">23%</div><div class="kpi-lbl">Children 6–59 months positive for malaria</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-title">Nutritional Status of Children Under 5 <span class="tag">Prevalence</span></div>
+      <div class="card-sub">% of children under 5 affected by each malnutrition condition</div>
+      <canvas id="ch-nut" height="210"></canvas>
+      <div class="note">Stunting at <strong>38%</strong> is chronic and structural — linked to poverty, poor diet and repeated illness with lasting effects on development.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vaccination Coverage, Children 12–23 Months <span class="tag">Coverage</span></div>
+      <div class="card-sub">% receiving each vaccine; national schedule vs basic threshold</div>
+      <canvas id="ch-vax" height="210"></canvas>
+      <div class="note">Only <strong>47%</strong> fully vaccinated per national schedule vs 67% basic threshold. Measles 2nd dose (73%) and dropout are key gaps.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Infant &amp; Young Child Feeding <span class="tag">Cascade</span></div>
+      <div class="card-sub">Key IYCF indicators from birth through 23 months</div>
+      <canvas id="ch-feed" height="210"></canvas>
+      <div class="note am">Only <strong>13% of children 6–23 months</strong> receive a minimum acceptable diet — a vast complementary feeding gap driving stunting.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Child Illness — 2 Weeks Before Survey <span class="tag">Prevalence</span></div>
+      <div class="card-sub">% under-5 with illness and % who sought care</div>
+      <canvas id="ch-ill" height="210"></canvas>
+      <div class="note">Care-seeking varies: <strong>70% for ARI, 67% for fever, 57% for diarrhoea</strong> — leaving many children without timely treatment.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HPV ═══ -->
+<div class="section" id="sec-hpv">
+  <div class="page-head">
+    <h2>HPV Vaccination <span class="accent">Module</span></h2>
+    <p>Malawi launched its national HPV programme in 2019. 2024 DHS collected retrospective data from women age 15–17 on vaccinations received when aged 9–14.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">58%</div><div class="kpi-lbl">Girls 15–17 with at least 1 HPV dose</div></div>
+    <div class="kpi green"><div class="kpi-val">89%</div><div class="kpi-lbl">Vaccinated at school (of those vaccinated)</div></div>
+    <div class="kpi"><div class="kpi-val">7%</div><div class="kpi-lbl">Vaccinated at a health facility</div></div>
+    <div class="kpi red"><div class="kpi-val">42%</div><div class="kpi-lbl">Eligible girls not yet vaccinated</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-title">HPV Vaccination Coverage <span class="tag">Donut</span></div>
+      <div class="card-sub">Girls age 15–17 — at least one dose received</div>
+      <canvas id="hpv-cov" height="220"></canvas>
+      <div class="note">With 58% coverage, <strong>42% of eligible girls remain unprotected</strong>. Full protection requires 2 doses — effective coverage may be lower still.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vaccination Delivery Site <span class="tag">Donut</span></div>
+      <div class="card-sub">Where vaccinated girls received their HPV dose</div>
+      <canvas id="hpv-site" height="220"></canvas>
+      <div class="note pu"><strong>89% delivered through schools</strong> — girls who leave school early are systematically missed, creating an equity gap linked to child marriage.</div>
+    </div>
+
+    <div class="card s2">
+      <div class="card-title">Programme Context <span class="tag">Reference</span></div>
+      <div class="card-sub">Key facts about the Malawi HPV vaccination programme and cervical cancer risk</div>
+      <div class="tiles">
+        <div class="tile"><div class="tile-lbl">Vaccine Coverage</div><div class="tile-body">Gardasil (HPV4) protects against types <strong>6, 11, 16 and 18</strong> — responsible for most cervical cancers and genital warts.</div></div>
+        <div class="tile"><div class="tile-lbl">Target Age</div><div class="tile-body">Girls aged <strong>9–14</strong> are the primary target. <strong>Two doses</strong> are required for full protection under Malawi's national programme (launched 2019).</div></div>
+        <div class="tile am"><div class="tile-lbl">Coverage Gap</div><div class="tile-body"><strong>42% of eligible girls</strong> remain unvaccinated. Out-of-school girls face the greatest gap as 89% of doses are school-delivered.</div></div>
+        <div class="tile rd"><div class="tile-lbl">Child Marriage Link</div><div class="tile-body">Girls married before 18 (38.7% of women 20–24) often leave school before vaccination, missing life-saving protection against cervical cancer.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EMPOWERMENT ═══ -->
+<div class="section" id="sec-empower">
+  <div class="page-head">
+    <h2>Women's <span class="accent">Empowerment</span></h2>
+    <p>Employment, earnings control, asset ownership and decision-making power — key determinants of women's health, agency and economic security.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">65%</div><div class="kpi-lbl">Married women employed (vs 93% men)</div></div>
+    <div class="kpi amber"><div class="kpi-val">26%</div><div class="kpi-lbl">Women deciding alone how earnings are used</div></div>
+    <div class="kpi"><div class="kpi-val">52%</div><div class="kpi-lbl">Women who own land</div></div>
+    <div class="kpi green"><div class="kpi-val">73%</div><div class="kpi-lbl">Women making own health decisions (alone/jointly)</div></div>
+    <div class="kpi red"><div class="kpi-val">18%</div><div class="kpi-lbl">Women who believe wife beating is justified</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-title">Control Over Women's Earnings <span class="tag">Donut</span></div>
+      <div class="card-sub">Who decides how currently married women's cash earnings are spent</div>
+      <canvas id="emp-earn" height="210"></canvas>
+      <div class="note">Only <strong>26% of women decide alone</strong>. <strong>28% report the husband decides</strong> — more women have earnings controlled by partners than fully self-directed.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Asset Ownership: Women vs Men <span class="tag">Comparison</span></div>
+      <div class="card-sub">% owning a house, land or mobile phone</div>
+      <canvas id="emp-assets" height="210"></canvas>
+      <div class="note">Women's asset ownership is surprisingly strong at 52% for house and land. However, <strong>94.6% of women's land carries no title deed</strong>.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Women's Decision-Making Power <span class="tag pu">Radar</span></div>
+      <div class="card-sub">% participating in decisions alone or jointly — key domains</div>
+      <canvas id="emp-dec" height="220"></canvas>
+      <div class="note pu">Highest participation in health decisions (73%), lowest in autonomous SRH decisions (<strong>42.3%</strong>) — directly limiting contraceptive uptake.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Women's Employment Trend, 2000–2024 <span class="tag">Trend</span></div>
+      <div class="card-sub">% currently married respondents employed in past 12 months</div>
+      <canvas id="emp-tr" height="220"></canvas>
+      <div class="note">Peaked at <strong>76% in 2010</strong>, declined to 65% in 2024 — now <strong>28 points below married men's rate of 93%</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DOMESTIC VIOLENCE ═══ -->
+<div class="section" id="sec-violence">
+  <div class="page-head">
+    <h2>Domestic <span class="accent">Violence</span></h2>
+    <p>28.5% of ever-partnered women experienced physical, sexual or psychological violence in the 12 months before the survey, with intimate partners as the primary perpetrators.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi red"><div class="kpi-val">28.5%</div><div class="kpi-lbl">Women subjected to any IPV — past 12 months</div></div>
+    <div class="kpi red"><div class="kpi-val">18.1%</div><div class="kpi-lbl">Psychological violence by intimate partner</div></div>
+    <div class="kpi red"><div class="kpi-val">15.2%</div><div class="kpi-lbl">Physical violence by intimate partner</div></div>
+    <div class="kpi amber"><div class="kpi-val">12.2%</div><div class="kpi-lbl">Sexual violence by intimate partner</div></div>
+    <div class="kpi amber"><div class="kpi-val">6.0%</div><div class="kpi-lbl">Women 18–29 experiencing sexual violence before age 18</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card s2">
+      <div class="card-title">Forms of Intimate Partner Violence — Past 12 Months <span class="tag rd">Horizontal Bar</span></div>
+      <div class="card-sub">% ever-partnered women experiencing each type of IPV in the year before the survey</div>
+      <canvas id="dv-forms" height="160"></canvas>
+      <div class="note rd">Psychological violence is the most prevalent form. Across all forms, <strong>nearly 1 in 3 women</strong> experienced partner violence in the past 12 months.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Attitudes Justifying Wife Beating <span class="tag">Women vs Men</span></div>
+      <div class="card-sub">% believing a husband is justified in beating his wife in at least one circumstance</div>
+      <canvas id="dv-att" height="200"></canvas>
+      <div class="note rd"><strong>18% of women and 16% of men</strong> accept wife beating as justifiable — attitudes that normalise violence and reduce help-seeking.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Sexual Autonomy — Married Women <span class="tag">Indicators</span></div>
+      <div class="card-sub">% who can refuse sex or request condom use with their husband</div>
+      <canvas id="dv-auto" height="200"></canvas>
+      <div class="note">Only <strong>62% can say no to sex</strong> and <strong>68% can ask for condom use</strong> — fundamental reproductive rights not yet fully exercised by 32–38% of married women.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Violence by Stage of Life <span class="tag">Lifecycle</span></div>
+      <div class="card-sub">% women affected — from childhood sexual violence to adult intimate partner violence</div>
+      <canvas id="dv-life" height="200"></canvas>
+      <div class="note"><strong>6% experienced sexual violence before age 18.</strong> Adult IPV rates are 2–3× higher — risk escalates sharply from girlhood to partnership.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PREGNANCY MORTALITY ═══ -->
+<div class="section" id="sec-preg">
+  <div class="page-head">
+    <h2>Pregnancy-Related <span class="accent">Mortality</span></h2>
+    <p>Maternal mortality ratio stands at 224 per 100,000 live births — a dramatic fall from the 1993–2000 peak. Progress is slowing; the SDG 3.1 target of 70 per 100,000 by 2030 remains very distant.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="kpi-row">
+    <div class="kpi red"><div class="kpi-val">245</div><div class="kpi-lbl">Pregnancy-Related Mortality Ratio per 100,000 live births</div><div class="kpi-delta">Down from 1,123 in 1993–2000</div></div>
+    <div class="kpi red"><div class="kpi-val">224</div><div class="kpi-lbl">Maternal Mortality Ratio per 100,000 live births</div></div>
+    <div class="kpi green"><div class="kpi-val">1.0%</div><div class="kpi-lbl">Lifetime risk of pregnancy-related death</div><div class="kpi-delta">Down from 7.0% in 1993–2000</div></div>
+    <div class="kpi"><div class="kpi-val">18</div><div class="kpi-lbl">Stillbirths per 1,000 pregnancies ≥28 weeks</div></div>
+    <div class="kpi"><div class="kpi-val">19</div><div class="kpi-lbl">Early neonatal deaths per 1,000 live births</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card s2">
+      <div class="card-title">Pregnancy-Related Mortality Ratio Trend, 1985–2024 <span class="tag">Historical</span></div>
+      <div class="card-sub">PRMR per 100,000 live births across six survey periods with SDG 3.1 target reference line</div>
+      <canvas id="preg-tr" height="170"></canvas>
+      <div class="note rd">PRMR fell from a peak of <strong>1,123 (1993–2000) to 245 (2017–2024)</strong> — a 78% reduction. At current rates, Malawi will <strong>not meet the SDG target of 70</strong> by 2030.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">PRMR by Mother's Age <span class="tag">Bar</span></div>
+      <div class="card-sub">Pregnancy-related deaths per 1,000 pregnancies by 5-year age group, 2017–2024</div>
+      <canvas id="preg-age" height="210"></canvas>
+      <div class="note">Risk peaks at <strong>ages 30–34 (0.59 per 1,000)</strong>. Older maternal age combined with high parity is the most dangerous combination.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">PRMR Across Survey Periods <span class="tag">Bar</span></div>
+      <div class="card-sub">Pregnancy-related mortality ratio — 1985 to 2024 surveys</div>
+      <canvas id="preg-hist" height="210"></canvas>
+      <div class="note am">The slowdown in decline between recent periods signals the need for targeted investment in emergency obstetric care and quality improvement.</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="fl">Produced by <strong>FemAnalytica</strong> — Data for Impact</div>
+  <div class="fr">Source: National Statistical Office — Malawi DHS 2024 Final Report, December 2025<br>Funded by USAID · World Bank · UNICEF · UNFPA · WHO · UK FCDO · Gates Foundation</div>
+</footer>
+
+<script>
+/* ── ROUTING ── */
+function go(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ── BRAND PALETTE ── */
+const CY = '#45CDD8';   // brand cyan
+const PU = '#7B6FD4';   // brand purple
+const TL = '#2B9EBA';   // brand teal
+const GR = '#2FC98B';
+const AM = '#F0A52A';
+const RD = '#E04A4A';
+const LT = 'rgba(232,244,252,0.95)';
+const MT = 'rgba(196,218,234,0.92)';
+const GD = 'rgba(24,43,62,0.8)';
+
+const B = {
+  responsive:true, maintainAspectRatio:true,
+  plugins:{
+    legend:{ labels:{ color:LT, font:{family:'Plus Jakarta Sans',size:10}, padding:10, boxWidth:10 } },
+    tooltip:{ backgroundColor:'#0C1826', borderColor:'#182B3E', borderWidth:1,
+      titleColor:LT, bodyColor:MT, padding:9,
+      titleFont:{family:'Plus Jakarta Sans',size:11,weight:'600'}, bodyFont:{family:'Plus Jakarta Sans',size:10} }
+  },
+  scales:{
+    x:{ ticks:{color:MT,font:{family:'Plus Jakarta Sans',size:10}}, grid:{color:GD}, border:{color:'transparent'} },
+    y:{ ticks:{color:MT,font:{family:'Plus Jakarta Sans',size:10}}, grid:{color:GD}, border:{color:'transparent'} }
+  }
+};
+const NS = { ...B, scales:{} };
+
+/* Horizontal bar helper — explicit type declarations required by Chart.js 4 */
+const H = (xMax, xTitle, legend=false) => ({
+  responsive:true, maintainAspectRatio:true, indexAxis:'y',
+  plugins:{ legend:{ display:legend, labels:{ color:LT, font:{family:'Plus Jakarta Sans',size:10}, padding:10, boxWidth:10 } },
+    tooltip:{ backgroundColor:'#0C1826', borderColor:'#182B3E', borderWidth:1, titleColor:LT, bodyColor:MT, padding:9,
+      titleFont:{family:'Plus Jakarta Sans',size:11,weight:'600'}, bodyFont:{family:'Plus Jakarta Sans',size:10} } },
+  scales:{
+    x:{ type:'linear', min:0, max:xMax, ticks:{color:MT,font:{family:'Plus Jakarta Sans',size:10}}, grid:{color:GD}, border:{color:'transparent'},
+        ...(xTitle ? {title:{display:true,text:xTitle,color:MT}} : {}) },
+    y:{ type:'category', ticks:{color:MT,font:{family:'Plus Jakarta Sans',size:10}}, grid:{color:GD}, border:{color:'transparent'} }
+  }
+});
+
+function mk(id, type, data, opts) {
+  const el = document.getElementById(id);
+  if (el) new Chart(el, { type, data, options:opts });
+}
+
+/* ── SDG SORTED DESCENDING ── */
+const SDG = [
+  { l:'Facility delivery',                     v:97, c:GR },
+  { l:'ANC from skilled provider',              v:96, c:CY },
+  { l:'Family planning demand satisfied',       v:84, c:TL },
+  { l:'Birth registration under-5',            v:78, c:PU },
+  { l:'Literate women',                         v:77, c:CY },
+  { l:'Full vaccination — basic antigens',      v:67, c:AM },
+  { l:'Exclusive breastfeeding <6 months',      v:60, c:TL },
+  { l:'ITN household ownership',               v:59, c:PU },
+  { l:'HPV vaccination ≥1 dose (girls 15–17)',  v:58, c:RD },
+].sort((a,b) => b.v - a.v);
+
+const sdgEl = document.getElementById('sdg-list');
+SDG.forEach(d => {
+  sdgEl.innerHTML += `
+    <div class="prog-row">
+      <span class="prog-lbl">${d.l}</span>
+      <div class="prog-track"><div class="prog-fill" style="width:${d.v}%;background:${d.c}"></div></div>
+      <span class="prog-val">${d.v}%</span>
+    </div>`;
+});
+
+/* ═══ CHARTS ═══ */
+
+/* OVERVIEW */
+mk('ov-mort','line',{
+  labels:['1992','2000','2004','2010','2015–16','2024'],
+  datasets:[
+    {label:'Under-5', data:[234,189,133,112,66,48],  borderColor:RD, backgroundColor:'rgba(224,74,74,0.07)',  tension:.4,fill:true,pointBackgroundColor:RD,pointRadius:4},
+    {label:'Infant',  data:[135,104,76,64,42,35],    borderColor:AM, backgroundColor:'rgba(240,165,42,0.05)', tension:.4,fill:true,pointBackgroundColor:AM,pointRadius:4},
+    {label:'Neonatal',data:[42,41,27,31,27,24],      borderColor:CY, backgroundColor:'rgba(69,205,216,0.05)', tension:.4,fill:true,pointBackgroundColor:CY,pointRadius:4},
+  ]
+},B);
+
+mk('ov-tfr','line',{
+  labels:['1992','2000','2004','2010','2015–16','2024'],
+  datasets:[{label:'TFR',data:[6.7,6.3,6.0,5.6,4.4,3.7],borderColor:CY,backgroundColor:'rgba(69,205,216,0.08)',tension:.4,fill:true,pointBackgroundColor:CY,pointRadius:4}]
+},{...B,scales:{y:{...B.scales.y,title:{display:true,text:'Children per woman',color:MT}}}});
+
+mk('ov-bubble','bar',{
+  labels:['Facility delivery','Full vaccination','Modern contraception','4+ ANC visits','Postnatal care'],
+  datasets:[
+    {label:'Urban',data:[99,81,78,76,66],backgroundColor:'rgba(69,205,216,0.72)',borderColor:CY,borderWidth:1,borderRadius:3},
+    {label:'Rural', data:[97,63,63,59,55],backgroundColor:'rgba(123,111,212,0.58)',borderColor:PU,borderWidth:1,borderRadius:3},
+  ]
+},H(105,'% coverage',true));
+
+/* CHILD MORTALITY */
+mk('mort-trend','line',{
+  labels:['1992','2000','2004','2010','2015–16','2024'],
+  datasets:[
+    {label:'Under-5', data:[234,189,133,112,66,48], borderColor:RD,backgroundColor:'rgba(224,74,74,0.06)',  tension:.4,fill:true,pointBackgroundColor:RD,pointRadius:4},
+    {label:'Infant',  data:[135,104,76,64,42,35],   borderColor:AM,backgroundColor:'rgba(240,165,42,0.04)', tension:.4,fill:true,pointBackgroundColor:AM,pointRadius:4},
+    {label:'Neonatal',data:[42,41,27,31,27,24],     borderColor:CY,backgroundColor:'rgba(69,205,216,0.04)', tension:.4,fill:true,pointBackgroundColor:CY,pointRadius:4},
+  ]
+},{...B,scales:{y:{...B.scales.y,title:{display:true,text:'Deaths per 1,000 live births',color:MT}}}});
+
+mk('mort-res','bar',{
+  labels:['Neonatal','Infant','Under-5'],
+  datasets:[
+    {label:'Urban',data:[28,34,43],backgroundColor:'rgba(69,205,216,0.7)',borderColor:CY,borderWidth:1},
+    {label:'Rural',data:[23,35,50],backgroundColor:'rgba(123,111,212,0.55)',borderColor:PU,borderWidth:1},
+  ]
+},{...B,scales:{y:{...B.scales.y,title:{display:true,text:'Deaths per 1,000 live births',color:MT}}}});
+
+mk('mort-sex','bar',{
+  labels:['Neonatal','Infant','Under-5'],
+  datasets:[
+    {label:'Male',  data:[29,40,58],backgroundColor:'rgba(69,205,216,0.7)',borderColor:CY,borderWidth:1},
+    {label:'Female',data:[20,29,39],backgroundColor:'rgba(123,111,212,0.55)',borderColor:PU,borderWidth:1},
+  ]
+},B);
+
+
+mk('mort-peri','bar',{
+  labels:['<20 years','20–29 years','30–39 years','40–49 years'],
+  datasets:[{label:'Perinatal deaths per 1,000 pregnancies ≥28 weeks',
+    data:[45,30,38,50],
+    backgroundColor:['rgba(224,74,74,0.72)','rgba(69,205,216,0.72)','rgba(240,165,42,0.72)','rgba(123,111,212,0.72)'],
+    borderColor:[RD,CY,AM,PU],borderWidth:1,borderRadius:4}]
+},{...B,plugins:{...B.plugins,legend:{display:false}},scales:{
+  y:{...B.scales.y,title:{display:true,text:'Deaths per 1,000 pregnancies ≥28 weeks',color:MT},min:0,max:60}
+}});
+
+/* MATERNAL */
+mk('mat-con','line',{
+  labels:['2000','2004','2010','2015–16','2024'],
+  datasets:[
+    {label:'Any Method',    data:[31,42,46,59,70],borderColor:GR,backgroundColor:'rgba(47,201,139,0.07)',tension:.4,fill:true,pointBackgroundColor:GR,pointRadius:4},
+    {label:'Modern Method', data:[26,28,42,55,66],borderColor:CY,backgroundColor:'rgba(69,205,216,0.06)',tension:.4,fill:true,pointBackgroundColor:CY,pointRadius:4},
+  ]
+},{...B,scales:{y:{...B.scales.y,max:100,title:{display:true,text:'% married women',color:MT}}}});
+
+mk('mat-mix','doughnut',{
+  labels:['Injectables (34%)','Implants (13%)','Pill (9%)','Sterilisation (8%)','Condom (3%)','IUD (1%)','Other (2%)'],
+  datasets:[{data:[34,13,9,8,3,1,2],backgroundColor:[CY,PU,GR,AM,TL,RD,'#1B3A6B'],borderColor:'#0C1826',borderWidth:3}]
+},{...NS,cutout:'52%'});
+
+mk('mat-fp','bar',{
+  labels:['Demand satisfied','Satisfied (modern)','Unmet need'],
+  datasets:[
+    {label:'Married Women',  data:[84,82,13],backgroundColor:'rgba(69,205,216,0.7)',borderColor:CY,borderWidth:1},
+    {label:'Unmarried (SAW)',data:[72,70,28],backgroundColor:'rgba(224,74,74,0.6)', borderColor:RD,borderWidth:1},
+  ]
+},{...B,scales:{y:{...B.scales.y,max:100}}});
+
+mk('mat-cas','bar',{
+  labels:['Any ANC','Facility delivery','Skilled ANC','Skilled attendant','4+ ANC visits','Postnatal (2 days)'],
+  datasets:[{label:'Coverage (%)',data:[98,97,96,96,62,58],
+    backgroundColor:[GR,GR,CY,CY,AM,RD].map(c=>c+'99'),
+    borderColor:[GR,GR,CY,CY,AM,RD],borderWidth:1}]
+},H(100));
+
+/* CHILD HEALTH */
+mk('ch-nut','bar',{
+  labels:['Stunted (chronic)','Underweight','Overweight','Wasted (acute)'],
+  datasets:[{label:'% children under 5',
+    data:[38,10,6,2],
+    backgroundColor:['rgba(224,74,74,0.72)','rgba(240,165,42,0.72)','rgba(47,201,139,0.68)','rgba(69,205,216,0.68)'],
+    borderColor:[RD,AM,GR,CY],borderWidth:1,borderRadius:4}]
+},H(50,'% children under 5'));
+
+mk('ch-vax','bar',{
+  labels:['BCG','Measles 1st dose','DPT 3rd dose','Pneumococcal','Measles 2nd dose','Fully vacc. (basic)','Fully vacc. (schedule)'],
+  datasets:[{label:'Coverage (%)',data:[95,88,84.8,76,73.4,67,47],
+    backgroundColor:[GR,TL,CY,PU,AM,CY,RD].map(c=>c+'99'),
+    borderColor:[GR,TL,CY,PU,AM,CY,RD],borderWidth:1}]
+},H(100));
+
+mk('ch-feed','bar',{
+  labels:['Excl. breastfed (2 days)','Breast within 1 hr','Excl. breastfed <6 mo','Min. meal frequency (6–23 mo)','Min. dietary diversity (6–23 mo)','Min. acceptable diet (6–23 mo)'],
+  datasets:[{label:'Coverage (%)',data:[94,68,60,38,24,13],
+    backgroundColor:[GR,GR,CY,PU,AM,RD].map(c=>c+'99'),
+    borderColor:[GR,GR,CY,PU,AM,RD],borderWidth:1}]
+},H(100));
+
+mk('ch-ill','bar',{
+  labels:['Fever (36%)','Diarrhoea (22%)','ARI (10%)'],
+  datasets:[
+    {label:'Had illness',      data:[36,22,10],backgroundColor:'rgba(224,74,74,0.6)',  borderColor:RD,borderWidth:1},
+    {label:'Sought treatment', data:[24,13,7], backgroundColor:'rgba(69,205,216,0.65)',borderColor:CY,borderWidth:1},
+  ]
+},{...B,scales:{y:{...B.scales.y,title:{display:true,text:'% children under 5',color:MT}}}});
+
+/* HPV */
+mk('hpv-cov','doughnut',{
+  labels:['Vaccinated ≥1 dose (58%)','Not vaccinated (42%)'],
+  datasets:[{data:[58,42],backgroundColor:[CY,'rgba(24,43,62,0.7)'],borderColor:[CY,'#182B3E'],borderWidth:3}]
+},{...NS,cutout:'62%'});
+
+mk('hpv-site','doughnut',{
+  labels:['School (89%)','Health facility (7%)','Elsewhere (4%)'],
+  datasets:[{data:[89,7,4],backgroundColor:[CY,PU,GR],borderColor:'#0C1826',borderWidth:3}]
+},{...NS,cutout:'56%'});
+
+/* EMPOWERMENT */
+mk('emp-earn','doughnut',{
+  labels:['Woman alone (26%)','Jointly (46%)','Husband decides (28%)'],
+  datasets:[{data:[26,46,28],backgroundColor:[GR,CY,RD],borderColor:'#0C1826',borderWidth:3}]
+},{...NS,cutout:'58%'});
+
+mk('emp-assets','bar',{
+  labels:['Own a House','Own Land','Own Mobile Phone'],
+  datasets:[
+    {label:'Women',data:[52,52,42],backgroundColor:'rgba(69,205,216,0.7)',borderColor:CY,borderWidth:1},
+    {label:'Men',  data:[43,42,58],backgroundColor:'rgba(123,111,212,0.55)',borderColor:PU,borderWidth:1},
+  ]
+},{...B,scales:{y:{...B.scales.y,max:75}}});
+
+mk('emp-dec','radar',{
+  labels:['Health decisions','Can refuse sex','Can request condom','Control earnings','Informed SRH decisions','Currently employed'],
+  datasets:[
+    {label:'Women',data:[73,62,68,72,42,65],borderColor:CY,backgroundColor:'rgba(69,205,216,0.1)',pointBackgroundColor:CY,pointRadius:3},
+    {label:'Men (selected)',data:[86,null,null,null,null,93],borderColor:PU,backgroundColor:'rgba(123,111,212,0.07)',pointBackgroundColor:PU,pointRadius:3},
+  ]
+},{...B,scales:{r:{ticks:{color:MT,backdropColor:'transparent',font:{family:'Plus Jakarta Sans',size:9}},grid:{color:GD},angleLines:{color:GD},pointLabels:{color:LT,font:{family:'Plus Jakarta Sans',size:9.5}},min:0,max:100}}});
+
+mk('emp-tr','line',{
+  labels:['2000','2004','2010','2015–16','2024'],
+  datasets:[
+    {label:'Married Women',data:[63,62,76,68,65],borderColor:CY,backgroundColor:'rgba(69,205,216,0.08)',tension:.4,fill:true,pointBackgroundColor:CY,pointRadius:4},
+    {label:'Married Men',  data:[88,89,91,91,93],borderColor:PU,backgroundColor:'rgba(123,111,212,0.05)',tension:.4,fill:true,pointBackgroundColor:PU,pointRadius:4},
+  ]
+},{...B,scales:{y:{...B.scales.y,min:50,max:100,title:{display:true,text:'% employed (past 12 months)',color:MT}}}});
+
+/* DOMESTIC VIOLENCE */
+mk('dv-forms','bar',{
+  labels:['Any form IPV (28.5%)','Psychological violence (18.1%)','Physical violence (15.2%)','Sexual violence (12.2%)'],
+  datasets:[{label:'% ever-partnered women — past 12 months',data:[28.5,18.1,15.2,12.2],
+    backgroundColor:[RD+'BB',PU+'BB',AM+'BB',TL+'BB'],
+    borderColor:[RD,PU,AM,TL],borderWidth:1}]
+},H(35));
+
+mk('dv-att','bar',{
+  labels:['Wife beating is justified'],
+  datasets:[
+    {label:'Women',data:[18],backgroundColor:'rgba(69,205,216,0.7)',borderColor:CY,borderWidth:1},
+    {label:'Men',  data:[16],backgroundColor:'rgba(123,111,212,0.55)',borderColor:PU,borderWidth:1},
+  ]
+},{...B,scales:{y:{...B.scales.y,max:25,title:{display:true,text:'% respondents',color:MT}}}});
+
+mk('dv-auto','bar',{
+  labels:['Can request condom use','Can say no to sex'],
+  datasets:[{label:'% currently married women',data:[68,62],
+    backgroundColor:['rgba(43,158,186,0.7)','rgba(69,205,216,0.7)'],
+    borderColor:[TL,CY],borderWidth:1}]
+},{...B,scales:{y:{...B.scales.y,max:100}},plugins:{...B.plugins,legend:{display:false}}});
+
+mk('dv-life','bar',{
+  labels:['Psychological IPV (past 12 months)','Physical IPV (past 12 months)','Sexual IPV (past 12 months)','Sexual violence before age 18','Non-partner sexual violence'],
+  datasets:[{label:'% women affected',
+    data:[18.1,15.2,12.2,6,0.3],
+    backgroundColor:['rgba(123,111,212,0.72)','rgba(224,74,74,0.68)','rgba(69,205,216,0.72)','rgba(240,165,42,0.7)','rgba(47,201,139,0.65)'],
+    borderColor:[PU,RD,CY,AM,GR],borderWidth:1,borderRadius:4}]
+},H(25,'% women affected'));
+
+/* PREGNANCY MORTALITY */
+mk('preg-tr','line',{
+  labels:['1985–1992','1993–2000','2003–2010','2008–2015','2017–2024'],
+  datasets:[
+    {label:'PRMR',              data:[615,1123,675,497,245],borderColor:RD,backgroundColor:'rgba(224,74,74,0.08)',tension:.3,fill:true,pointBackgroundColor:RD,pointRadius:6},
+    {label:'SDG 3.1 Target (70)',data:[70,70,70,70,70],     borderColor:'rgba(47,201,139,0.4)',borderDash:[5,4],tension:0,pointRadius:0},
+  ]
+},{...B,scales:{y:{...B.scales.y,title:{display:true,text:'PRMR per 100,000 live births',color:MT}}}});
+
+mk('preg-age','bar',{
+  labels:['15–19','20–24','25–29','30–34','35–39','40–44','45–49'],
+  datasets:[{label:'Pregnancy-related deaths per 1,000 pregnancies',
+    data:[0.16,0.22,0.37,0.59,0.48,0.35,0.17],
+    backgroundColor:['rgba(47,201,139,0.72)','rgba(69,205,216,0.72)','rgba(43,158,186,0.68)','rgba(224,74,74,0.78)','rgba(240,165,42,0.72)','rgba(123,111,212,0.68)','rgba(69,205,216,0.5)'],
+    borderColor:[GR,CY,TL,RD,AM,PU,CY],borderWidth:1,borderRadius:4}]
+},{...B,plugins:{...B.plugins,legend:{display:false}},scales:{
+  y:{...B.scales.y,title:{display:true,text:'Deaths per 1,000 pregnancies',color:MT}}
+}});
+
+mk('preg-hist','bar',{
+  labels:['1985–1992','1993–2000','2003–2010','2008–2015','2017–2024'],
+  datasets:[{label:'PRMR per 100,000 live births',data:[615,1123,675,497,245],
+    backgroundColor:[TL,RD,AM,PU,GR].map(c=>c+'AA'),
+    borderColor:[TL,RD,AM,PU,GR],borderWidth:1}]
+},{...B,plugins:{...B.plugins,legend:{display:false}},scales:{y:{...B.scales.y,title:{display:true,text:'PRMR per 100,000 live births',color:MT}}}});
+</script>
+</body>
+</html>
