@@ -57,20 +57,20 @@ header {
   display:flex; align-items:center; justify-content:space-between;
   padding:0 28px; height:62px; gap:16px;
 }
-.brand { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:5px; }
+.brand { display:flex; flex-direction:column; justify-content:center; align-items:flex-end; gap:5px; }
 .brand img {
   height:32px; width:auto; display:block; flex-shrink:0;
 }
 .brand-tagline {
-  font-size:9.5px; font-weight:600; color:rgba(10,30,65,0.80);
+  font-size:9.5px; font-weight:500; color:rgba(255,255,255,0.70);
   letter-spacing:.1em; text-transform:uppercase;
 }
 .header-meta {
-  font-size:11px; color:rgba(255,255,255,0.88); text-align:right; line-height:1.5;
-  background:rgba(0,0,0,0.25); border-radius:20px; padding:6px 16px;
-  backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.1);
+  font-size:11px; color:rgba(10,30,65,0.88); text-align:left; line-height:1.5;
+  background:rgba(255,255,255,0.28); border-radius:20px; padding:6px 16px;
+  backdrop-filter:blur(6px); margin-right:auto;
 }
-.header-meta strong { color:#fff; font-weight:600; display:block; font-size:12px; }
+.header-meta strong { color:#0a1e41; font-weight:700; display:block; font-size:12px; }
 
 /* ── NAV ── */
 nav {
@@ -218,13 +218,13 @@ footer .fr { font-size:10.5px; color:var(--text3); text-align:right; }
 
 <header>
   <div class="header-inner">
-    <div class="brand">
-      <img src="Transparent Logo.png" alt="FemAnalytica">
-      <span class="brand-tagline">Data Intelligence for Gender &amp; Health Equity</span>
-    </div>
     <div class="header-meta">
       <strong>Malawi Demographic &amp; Health Survey 2024</strong>
       National Statistical Office · Final Report, December 2025
+    </div>
+    <div class="brand">
+      <img src="Transparent Logo.png" alt="FemAnalytica">
+      <span class="brand-tagline">Data Intelligence for Gender &amp; Health Equity</span>
     </div>
   </div>
 </header>
